@@ -1,7 +1,4 @@
-This image is available from the corresponding dockerhub registry at [shongololo/postgis](https://hub.docker.com/r/shongololo/postgis/).
-
-This is a basic PostGIS setup, created for easily setting up PostGIS enabled Postgres databases.
-It is not necessarily designed with security or fail-safety in mind, so if these things are important to you then please further review, extend, and configure it for your use-case.
+A PostGIS container including pgrouting and SSL.
 
 Volume Mapping
 -------------------
