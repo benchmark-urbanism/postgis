@@ -1,5 +1,3 @@
-This image is available from the corresponding dockerhub registry at [shongololo/postgis](https://hub.docker.com/r/shongololo/postgis/).
-
 This is a basic PostGIS setup, created for easily setting up PostGIS enabled Postgres databases.
 It is not necessarily designed with security or fail-safety in mind, so if these things are important to you then please further review, extend, and configure it for your use-case.
 
@@ -44,7 +42,6 @@ docker run -i -t -p 5432:5432  \
     --volume=/path/to/local/folder:/postgresql/9.6/main \
     shongololo/postgis
 ```
-
 Or if running detached, use the -d flag instead of -i and -t.
 
 If you are running the container using an existing folder that already contains a configured database, then you can omit the environment flags.
