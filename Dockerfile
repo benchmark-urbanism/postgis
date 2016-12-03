@@ -42,7 +42,6 @@ RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt jessie-pgdg main" >
 ADD scripts /scripts
 RUN chmod -R 0755 /scripts
 
-# create the directory and set permissions prior to mapping the volume
 RUN mkdir -p /postgresql/9.6/main \
     && mkdir -p /postgresql/9.6/ssl
 
