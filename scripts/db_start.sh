@@ -19,50 +19,70 @@ then
     # check whether POSTGRES_USER, POSTGRES_PASS, and DB_NAME have been supplied via environment variables. If not, use defaults.
     if [ -z "$PG_USER" ]; then
       export PG_USER=my_username
-      printf "\nNOTE -> Using default PG_USER value: $PG_USER \n"
+      printf "\nNOTE -> Using default PG_USER value: $PG_USER\n"
     else
-      printf "\nNOTE -> Using supplied PG_USER value: $PG_USER \n"
+      printf "\nNOTE -> Using supplied PG_USER value: $PG_USER\n"
     fi
 
     if [ -z "$PG_PASSWORD" ]; then
       export PG_PASSWORD=my_password
-      printf "\nNOTE -> Using default PG_PASSWORD value: $PG_PASSWORD \n"
+      printf "\nNOTE -> Using default PG_PASSWORD value: $PG_PASSWORD\n"
     else
-      printf "\nNOTE -> Using supplied PG_PASSWORD value: * \n"
+      printf "\nNOTE -> Using supplied PG_PASSWORD value: $PG_PASSWORD\n"
     fi
 
     if [ -z "$DB_NAME" ]; then
       export DB_NAME=my_db
-      printf "\nNOTE -> Using default DB_NAME value: $DB_NAME \n"
+      printf "\nNOTE -> Using default DB_NAME value: $DB_NAME\n"
     else
-      printf "\nNOTE -> Using supplied DB_NAME value: $DB_NAME \n"
+      printf "\nNOTE -> Using supplied DB_NAME value: $DB_NAME\n"
     fi
 
-    /usr/lib/postgresql/9.6/bin/pg_ctl initdb -D /postgresql/9.6/main -o '--locale=en_GB.utf-8'
-
-    /usr/lib/postgresql/9.6/bin/pg_ctl start -w -D /postgresql/9.6/main
+    chown -R postgres:postgres /postgresql/9.6/main
+    chmod 0600 /postgresql/9.6/main
+    gosu postgres /usr/lib/postgresql/9.6/bin/pg_ctl initdb -D /postgresql/9.6/main -o '--locale=en_GB.UTF-8'
+    gosu postgres /usr/lib/postgresql/9.6/bin/pg_ctl start -w -D /postgresql/9.6/main
 
     # setup basic database and permissions
-    psql -v ON_ERROR_STOP=1 -c "ALTER USER postgres WITH PASSWORD '$PG_PASSWORD';"
-    psql -v ON_ERROR_STOP=1 -c "CREATE ROLE $PG_USER LOGIN PASSWORD '$PG_PASSWORD';"
-    psql -v ON_ERROR_STOP=1 -c "CREATE DATABASE $DB_NAME OWNER $PG_USER;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "CREATE EXTENSION adminpack;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "CREATE EXTENSION hstore;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "CREATE EXTENSION postgis;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "CREATE EXTENSION postgis_topology;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "CREATE EXTENSION postgis_sfcgal;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "CREATE EXTENSION fuzzystrmatch;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "CREATE EXTENSION address_standardizer;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "CREATE EXTENSION postgis_tiger_geocoder;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "CREATE EXTENSION pgrouting;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "SET postgis.gdal_enabled_drivers TO ENABLE_ALL;"
-    psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "SET postgis.enable_outdb_rasters TO True;"
+    gosu postgres psql -v ON_ERROR_STOP=1 << EOF
+        ALTER USER postgres WITH PASSWORD '$PG_PASSWORD';
+        CREATE ROLE $PG_USER LOGIN PASSWORD '$PG_PASSWORD';
+        CREATE DATABASE $DB_NAME OWNER $PG_USER;
+EOF
 
-    # setup pg_hba.conf
-    echo "host      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
+    gosu postgres psql -v ON_ERROR_STOP=1 --dbname=$DB_NAME << EOF
+        CREATE EXTENSION adminpack;
+        CREATE EXTENSION hstore;
+        CREATE EXTENSION postgis;
+        CREATE EXTENSION postgis_topology;
+        CREATE EXTENSION postgis_sfcgal;
+        CREATE EXTENSION fuzzystrmatch;
+        CREATE EXTENSION address_standardizer;
+        CREATE EXTENSION postgis_tiger_geocoder;
+        CREATE EXTENSION pgrouting;
+        SET postgis.gdal_enabled_drivers = 'ENABLE_ALL';
+        SET postgis.enable_outdb_rasters = True;
+EOF
 
     # setup configs
+    echo "host      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
     echo "listen_addresses='*'" >> /postgresql/9.6/main/postgresql.conf
+
+    # add SSL if certificate and key files provided
+    if [ ! -f postgresql/9.6/ssl/server.crt ]; then
+      printf "\nNOTE -> No certificate file provided -> not enabling SSL\n"
+    else
+        if [ ! -f postgresql/9.6/ssl/server.key ]; then
+            printf "\nNOTE -> No key file provided -> not enabling SSL\n"
+        else
+            printf "\nNOTE -> found server certificate and key -> enabling SSL\n"
+            echo "ssl = on" >> /postgresql/9.6/main/postgresql.conf
+            echo "ssl_cert_file = '/postgresql/9.6/ssl/server.crt'" >> /postgresql/9.6/main/postgresql.conf
+            chown postgres:postgres /postgresql/9.6/ssl/server.key
+            chmod 0600 /postgresql/9.6/ssl/server.key
+            echo "ssl_key_file = '/postgresql/9.6/ssl/server.key'" >> /postgresql/9.6/main/postgresql.conf
+        fi
+    fi
 
     # SEE http://pgtune.leopard.in.ua -> presently based on 4GB mixed purpose at 20 max connections
 
@@ -88,8 +108,8 @@ then
 
     echo "Database setup completed. Restarting server in foreground:"
 
-    /usr/lib/postgresql/9.6/bin/pg_ctl stop -D /postgresql/9.6/main -m smart
-    /usr/lib/postgresql/9.6/bin/postgres -D /postgresql/9.6/main
+    gosu postgres /usr/lib/postgresql/9.6/bin/pg_ctl stop -D /postgresql/9.6/main -m smart
+    gosu postgres /usr/lib/postgresql/9.6/bin/postgres -D /postgresql/9.6/main
 
 else
 
@@ -100,6 +120,19 @@ else
     export POSTGIS_ENABLE_OUTDB_RASTERS=1
     export POSTGIS_GDAL_ENABLED_DRIVERS=ENABLE_ALL
 
-    /usr/lib/postgresql/9.6/bin/postgres -D /postgresql/9.6/main
+    if [ ! -f postgresql/9.6/ssl/server.crt ]; then
+          printf "\nNOTE -> No certificate file provided -> disabling SSL if present\n"
+          export PGSSLMODE=disable
+    else
+        if [ ! -f postgresql/9.6/ssl/server.key ]; then
+            printf "\nNOTE -> No key file provided -> disabling SSL if present\n"
+            export PGSSLMODE=disable
+        else
+            printf "\nNOTE -> found server certificate and key -> enabling SSL\n"
+            export PGSSLMODE=require
+        fi
+    fi
+
+    gosu postgres /usr/lib/postgresql/9.6/bin/postgres -D /postgresql/9.6/main
 
 fi
