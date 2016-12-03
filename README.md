@@ -58,6 +58,7 @@ docker run -i -t -p 5432:5432  \
     shongololo/postgis
 ```
 
+
 > Provided you have a domain name mapped to your postgres server, then you can prepare a certificate and key file by using the free lets-enccrypt service.
 > For example:
 > ```bash
