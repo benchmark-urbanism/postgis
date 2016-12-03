@@ -40,10 +40,8 @@ then
     
     if [ -z "$LETSENCRYPT_DOMAIN" ]; then
       printf "NOTE -> No domain name provided -> not enabling SSL "
-      export SSL_MODE=off
     else
       printf "NOTE -> Domain name and email address provided, emabling SSL, this will only work if port 80 is open "
-      export SSL_MODE=on
       /root/.acme.sh/acme.sh --issue --standalone -d $LETSENCRYPT_DOMAIN
       /root/.acme.sh/acme.sh --installcert -d $LETSENCRYPT_DOMAIN \
         --certpath /postgresql/9.6/main/server.crt \
@@ -71,13 +69,15 @@ then
     psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "SET postgis.enable_outdb_rasters TO True;"
 
     # setup pg_hba.conf
-    echo "hostssl      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
+    if [ -z "$LETSENCRYPT_DOMAIN" ]; then
+      echo "host      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
+    else
+      echo "hostssl      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
+      echo "ssl = on" >> /postgresql/9.6/main/postgresql.conf
+    fi
 
     # setup configs
     echo "listen_addresses='*'" >> /postgresql/9.6/main/postgresql.conf
-
-    # set SSL mode
-    echo "ssl = $SSL_MODE" >> /postgresql/9.6/main/postgresql.conf
 
     # SEE http://pgtune.leopard.in.ua -> presently based on 4GB mixed purpose at 20 max connections
 
