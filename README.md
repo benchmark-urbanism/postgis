@@ -10,14 +10,13 @@ Volume Mapping the data path
 
 Environment Variables
 ---------------------
-The following environment variables can be set for configuring your new database.
+The following environment variables can be set for configuring a new database.
 
 Environment Variable | Default | Description
 ------------------------|---------|--------------
 `PG_USER` |  `my_username` | The username for your database role (user).
 `PG_PASSWORD` | `my_password` | Your password.
 `DB_NAME` | `my_db` | The name for the new database.
-
 
 Port Mapping
 ------------
@@ -63,15 +62,18 @@ docker run -i -t -p 5432:5432  \
 > For example:
 > ```bash
 > # install acme.sh
+> sudo apt-get install wget cron netcat
 > wget -O - https://get.acme.sh | sh
 >
 > # generate the certificate for your domain
-> /root/.acme.sh/acme.sh --issue --standalone -d my_domain.com
+> sudo ~/.acme.sh/acme.sh --issue --standalone -d my_domain.com
 >
 > # install the certificate and key file to your folder path
-> /root/acme.sh/acme.sh --installcert -d my_domain.com \
+> mkdir /path/to/local/ssl/files
+> ~/.acme.sh/acme.sh --installcert -d my_domain.com \
 >     --certpath    /path/to/local/ssl/files/server.crt \
 >     --keypath     /path/to/local/ssl/files/server.key
+> sudo chmod 0600 /path/to/local/ssl/files/server.key
 > ```
 
 Configuration Parameters
