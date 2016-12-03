@@ -71,7 +71,7 @@ then
     psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "SET postgis.enable_outdb_rasters TO True;"
 
     # setup pg_hba.conf
-    echo "host      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
+    echo "hostssl      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
 
     # setup configs
     echo "listen_addresses='*'" >> /postgresql/9.6/main/postgresql.conf
