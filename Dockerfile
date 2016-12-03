@@ -26,7 +26,7 @@ RUN chmod -R 0700 /postgresql/9.6/main
 
 EXPOSE 5432
 
-VOLUME  /postgresql/9.6/main
+VOLUME ["/postgresql/9.6/main", "/postgresql/9.6/ssl/"]
 
 USER postgres
 

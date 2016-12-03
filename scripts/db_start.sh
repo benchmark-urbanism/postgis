@@ -37,16 +37,6 @@ then
     else
       printf "NOTE -> Using supplied DB_NAME value: $DB_NAME "
     fi
-    
-    if [ -z "$LETSENCRYPT_DOMAIN" ]; then
-      printf "NOTE -> No domain name provided -> not enabling SSL "
-    else
-      printf "NOTE -> Domain name and email address provided, emabling SSL, this will only work if port 80 is open "
-      /root/.acme.sh/acme.sh --issue --standalone -d $LETSENCRYPT_DOMAIN
-      /root/.acme.sh/acme.sh --installcert -d $LETSENCRYPT_DOMAIN \
-        --certpath /postgresql/9.6/main/server.crt \
-        --keypath /postgresql/9.6/main/server.key
-    fi
 
     /usr/lib/postgresql/9.6/bin/pg_ctl initdb -D /postgresql/9.6/main -o '--locale=en_GB.utf-8'
 
@@ -68,15 +58,22 @@ then
     psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "SET postgis.gdal_enabled_drivers TO ENABLE_ALL;"
     psql -v ON_ERROR_STOP=1 -d $DB_NAME -c "SET postgis.enable_outdb_rasters TO True;"
 
-    # setup pg_hba.conf
-    if [ -z "$LETSENCRYPT_DOMAIN" ]; then
+    # setup configs
+    if [ ! -f postgresql/9.6/ssl/server.crt ]; then
+      printf "NOTE -> No certificate file provided -> not enabling SSL "
       echo "host      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
     else
-      echo "hostssl      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
-      echo "ssl = on" >> /postgresql/9.6/main/postgresql.conf
+        if [ ! -f postgresql/9.6/ssl/server.key ]; then
+            printf "NOTE -> No key file provided -> not enabling SSL "
+            echo "host      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
+        else
+            echo "hostssl      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
+            echo "ssl = on" >> /postgresql/9.6/main/postgresql.conf
+            echo "ssl_cert_file = 'postgresql/9.6/ssl/server.crt'" >> /postgresql/9.6/main/postgresql.conf
+            echo "ssl_key_file = 'postgresql/9.6/ssl/server.key'" >> /postgresql/9.6/main/postgresql.conf
+        fi
     fi
 
-    # setup configs
     echo "listen_addresses='*'" >> /postgresql/9.6/main/postgresql.conf
 
     # SEE http://pgtune.leopard.in.ua -> presently based on 4GB mixed purpose at 20 max connections
