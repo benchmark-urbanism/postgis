@@ -19,23 +19,35 @@ then
     # check whether POSTGRES_USER, POSTGRES_PASS, and DB_NAME have been supplied via environment variables. If not, use defaults.
     if [ -z "$PG_USER" ]; then
       export PG_USER=my_username
-      printf "\nNOTE -> Using default PG_USER value: $PG_USER \n"
+      printf "NOTE -> Using default PG_USER value: $PG_USER "
     else
-      printf "\nNOTE -> Using supplied PG_USER value: $PG_USER \n"
+      printf "NOTE -> Using supplied PG_USER value: $PG_USER "
     fi
 
     if [ -z "$PG_PASSWORD" ]; then
       export PG_PASSWORD=my_password
-      printf "\nNOTE -> Using default PG_PASSWORD value: $PG_PASSWORD \n"
+      printf "NOTE -> Using default PG_PASSWORD value: $PG_PASSWORD "
     else
-      printf "\nNOTE -> Using supplied PG_PASSWORD value: * \n"
+      printf "NOTE -> Using supplied PG_PASSWORD value: $PG_PASSWORD "
     fi
 
     if [ -z "$DB_NAME" ]; then
       export DB_NAME=my_db
-      printf "\nNOTE -> Using default DB_NAME value: $DB_NAME \n"
+      printf "NOTE -> Using default DB_NAME value: $DB_NAME "
     else
-      printf "\nNOTE -> Using supplied DB_NAME value: $DB_NAME \n"
+      printf "NOTE -> Using supplied DB_NAME value: $DB_NAME "
+    fi
+    
+    if [ -z "$LETSENCRYPT_DOMAIN" ]; then
+      printf "NOTE -> No domain name provided -> not enabling SSL "
+      export SSL_MODE=off
+    else
+      printf "NOTE -> Domain name and email address provided, emabling SSL, this will only work if port 80 is open "
+      export SSL_MODE=on
+      /root/.acme.sh/acme.sh --issue --standalone -d $LETSENCRYPT_DOMAIN
+      /root/.acme.sh/acme.sh --installcert -d $LETSENCRYPT_DOMAIN \
+        --certpath /postgresql/9.6/main/server.crt \
+        --keypath /postgresql/9.6/main/server.key
     fi
 
     /usr/lib/postgresql/9.6/bin/pg_ctl initdb -D /postgresql/9.6/main -o '--locale=en_GB.utf-8'
@@ -63,6 +75,9 @@ then
 
     # setup configs
     echo "listen_addresses='*'" >> /postgresql/9.6/main/postgresql.conf
+
+    # set SSL mode
+    echo "ssl = $SSL_MODE" >> /postgresql/9.6/main/postgresql.conf
 
     # SEE http://pgtune.leopard.in.ua -> presently based on 4GB mixed purpose at 20 max connections
 
