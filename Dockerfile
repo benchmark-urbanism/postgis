@@ -28,11 +28,12 @@ RUN apt-get update \
 
 # install Postgres etc.
 RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt jessie-pgdg main" >> /etc/apt/sources.list' \
-    && gpg --keyserver pgpkeys.mit.edu --recv-key 7FCC7D46ACCC4CF8 \
-    && gpg -a --export 7FCC7D46ACCC4CF8 | apt-key add - \
-    && apt-get update \
+    && gpg --keyserver keyserver.ubuntu.com --recv-key 7FCC7D46ACCC4CF8 \
+    && gpg -a --export 7FCC7D46ACCC4CF8 | apt-key add -
+
+RUN apt-get update \
     && apt-get install --no-install-recommends -y \
-        gdal-bin postgresql-9.6 \
+        postgresql-9.6 \
         postgresql-contrib-9.6 \
         postgresql-9.6-postgis-2.3 \
         postgresql-9.6-postgis-2.3-scripts \
