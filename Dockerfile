@@ -24,14 +24,13 @@ RUN set -x \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends locales \
     && rm -rf /var/lib/apt/lists/* \
-	&& localedef -i en_GB -c -f UTF-8 -A /usr/share/locale/locale.alias en_GB.UTF-8 \
+	&& localedef -i en_GB -c -f UTF-8 -A /usr/share/locale/locale.alias en_GB.UTF-8
 
 # install Postgres etc.
 RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt jessie-pgdg main" >> /etc/apt/sources.list' \
     && gpg --keyserver keyserver.ubuntu.com --recv-key 7FCC7D46ACCC4CF8 \
     && gpg -a --export 7FCC7D46ACCC4CF8 | apt-key add -
-
-RUN apt-get update \
+    && apt-get update \
     && apt-get install --no-install-recommends -y \
         postgresql-9.6 \
         postgresql-contrib-9.6 \
