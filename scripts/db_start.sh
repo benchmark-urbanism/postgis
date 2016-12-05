@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# use /etc/postgresql/9.6/main for the 'data directory'. When the database starts it will load postgresql.conf from
-# this location, which, in turn, points to /var/lib/postgresql/9.6/main (the mapped directory) as the actual data location.
-# The intent is to keep the postgresql.conf settings separate from the database data to simplify modifications via docker.
-
 set -e # exit if non-zero
 set -o # exit if pipefail
 
