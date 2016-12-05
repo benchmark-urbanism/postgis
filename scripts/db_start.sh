@@ -71,9 +71,11 @@ EOF
     # add SSL if certificate and key files provided
     if [ ! -f postgresql/9.6/ssl/server.crt ]; then
       printf "\nNOTE -> No certificate file provided -> not enabling SSL\n"
+      echo "ssl = off" >> /postgresql/9.6/main/postgresql.conf
     else
         if [ ! -f postgresql/9.6/ssl/server.key ]; then
             printf "\nNOTE -> No key file provided -> not enabling SSL\n"
+            echo "ssl = off" >> /postgresql/9.6/main/postgresql.conf
         else
             printf "\nNOTE -> found server certificate and key -> enabling SSL\n"
             echo "ssl = on" >> /postgresql/9.6/main/postgresql.conf
@@ -129,6 +131,9 @@ else
             export PGSSLMODE=disable
         else
             printf "\nNOTE -> found server certificate and key -> enabling SSL\n"
+            printf "HOWEVER... SSL will only work if DB initialised with SSL"
+            printf "OTHERWISE -> manually edit your postgresql.conf and set ssl = on\n"
+            sed "s/ssl = off/ssl = on/" /postgresql/9.6/main/postgresql.conf
             export PGSSLMODE=require
         fi
     fi
