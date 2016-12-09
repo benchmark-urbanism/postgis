@@ -127,8 +127,8 @@ else
             export PGSSLMODE=disable
         else
             printf "\nNOTE -> found server certificate and key -> enabling SSL\n"
-            printf "HOWEVER... SSL will only work if DB initialised with SSL"
-            printf "OTHERWISE -> manually edit your postgresql.conf and set ssl = on\n"
+            printf "\nHOWEVER... SSL will only work if DB initialised with SSL\n"
+            printf "\nOTHERWISE -> manually edit your postgresql.conf and set ssl = on\n"
             sed "s/ssl = off/ssl = on/" /postgresql/9.6/main/postgresql.conf
             export PGSSLMODE=require
         fi
