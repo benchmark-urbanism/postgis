@@ -47,6 +47,7 @@ RUN apt-get update \
         libboost-dev \
         libmpfr-dev \
         libgmp-dev \
+        libpcre3-dev \
         postgresql-contrib \
         postgresql-server-dev-all
 
