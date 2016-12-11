@@ -30,7 +30,7 @@ Example
 -------
 For running the database in the foreground:
 ```
-docker run -p 5432:5432  \
+docker run -d -p 5432:5432  \
     -e "PG_USER=my_username" \
     -e "PG_PASSWORD=my_password" \
     -e "DB_NAME=my_db" \
@@ -39,8 +39,6 @@ docker run -p 5432:5432  \
     shongololo/postgis
 docker logs -f <docker image id>
 ```
-
-Or if running detached, use the -d flag instead of -i and -t.
 
 If you are running the container using an existing folder that already contains a configured database, then you can omit the environment flags. If you omit the environment arguments and a database has not already been initialised, then the default values will be used.
 
@@ -51,7 +49,7 @@ To use SSL, prepare a `server.crt` (certificate file) and `server.key` (key file
 Then map the folder to the container's `/postgresql/9.6/ssl/` path by passing an additional volume flag, i.e.:
 
 ```
-docker run -p 5432:5432  \
+docker run -d -p 5432:5432  \
     -e "PG_USER=my_username" \
     -e "PG_PASSWORD=my_password" \
     -e "DB_NAME=my_db" \
