@@ -81,12 +81,12 @@ docker logs -f <docker image id>
 
 Configuration Parameters
 ------------------------
-The default configured settings are based on 4GB of RAM and a maximum 20 connections. The tuning parameters are set in accordance with [http://pgtune.leopard.in.ua](pgtune). You can edit the `postgresql.conf ` file inside your mapped data path directory for further customisation. These will have been appended to the end of the file and should be modified there.
+The default configured settings are based on 4GB of RAM and a maximum 50 connections. The tuning parameters are set in accordance with [http://pgtune.leopard.in.ua](pgtune). You can edit the `postgresql.conf ` file inside your mapped data path directory for further customisation. These will have been appended to the end of the file and should be modified there.
 
->max_connections = 20  
+>max_connections = 50  
 >shared_buffers = 1GB  
 >effective_cache_size = 3GB  
->work_mem = 26214kB  
+>work_mem = 10485kB  
 >maintenance_work_mem = 256MB  
 >min_wal_size = 1GB  
 >max_wal_size = 2GB  
