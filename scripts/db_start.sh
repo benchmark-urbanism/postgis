@@ -82,14 +82,14 @@ EOF
         fi
     fi
 
-    # SEE http://pgtune.leopard.in.ua -> presently based on 4GB mixed purpose at 20 max connections
+    # SEE http://pgtune.leopard.in.ua -> presently based on 4GB mixed purpose at 50 max connections
 
-    echo 'max_connections = 20' >> /postgresql/9.6/main/postgresql.conf
+    echo 'max_connections = 50' >> /postgresql/9.6/main/postgresql.conf
     # some say to set shared_buffers to a 1/4 of your memory
     echo 'shared_buffers = 1GB' >> /postgresql/9.6/main/postgresql.conf
     echo 'effective_cache_size = 3GB' >> /postgresql/9.6/main/postgresql.conf
     # work_mem is used per table per user, e.g. 4 tables * 5 users * 100 = 2000 * parallel workers...
-    echo 'work_mem=26214kB' >> /postgresql/9.6/main/postgresql.conf
+    echo 'work_mem=10485kB' >> /postgresql/9.6/main/postgresql.conf
     # typically only one of these at a time, so it is safe to use larger values
     echo 'maintenance_work_mem = 256MB' >> /postgresql/9.6/main/postgresql.conf
     echo 'min_wal_size = 1GB' >> /postgresql/9.6/main/postgresql.conf
