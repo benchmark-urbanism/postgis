@@ -84,7 +84,6 @@ EOF
     fi
 
     # SEE http://pgtune.leopard.in.ua -> presently based on 4GB mixed purpose at 50 max connections
-
     echo 'max_connections = 50' >> /postgresql/9.6/main/postgresql.conf
     # some say to set shared_buffers to a 1/4 of your memory
     echo 'shared_buffers = 1GB' >> /postgresql/9.6/main/postgresql.conf
