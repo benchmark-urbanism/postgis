@@ -61,6 +61,7 @@ EOF
 EOF
 
     # setup configs
+    echo "local     all     all                 trust" >> /postgresql/9.6/main/pg_hba.conf
     echo "host      all     all     0.0.0.0/0   md5" >> /postgresql/9.6/main/pg_hba.conf
     echo "listen_addresses='*'" >> /postgresql/9.6/main/postgresql.conf
 
