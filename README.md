@@ -1,4 +1,4 @@
-Postgres 9.6 with PostGIS 2.4 (Geos 3.6), with SFCGAL (1.3), pgrouting 2.3.1, raster, and SSL support.
+Postgres 9.6 with PostGIS 2.4 (Geos 3.6), with SFCGAL (1.3), pgrouting 2.3.1, raster, and SSL support. PostGIS 2.3 is available with the shongololo/postgis:2.3 tag.
 
 Mapping the data volume path
 ----------------------------
