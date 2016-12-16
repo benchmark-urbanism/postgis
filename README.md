@@ -1,6 +1,6 @@
 Postgres 9.6 with PostGIS 2.4 (Geos 3.6), with SFCGAL (1.3), pgrouting 2.3.1, raster, and SSL support.
 
-Volume Mapping the data path
+Mapping the data volume path
 ----------------------------
 - This container maps the `/postgresql/9.6/main` volume path. If you do not map a local directory path to this volume, then it will create a new database setup inside the container. This data WILL NOT persist if you delete the container.
 
@@ -8,7 +8,7 @@ Volume Mapping the data path
 
 - If this locally mapped directory is not empty, then the container will try to reuse an existing database if present inside this directory. If it is not able to do so, or if the folder contains other files or folders, then you will encounter an error.
 
-Environment Variables
+Environment variables
 ---------------------
 The following environment variables can be set for configuring a new database.
 
@@ -28,19 +28,19 @@ If you first upload data to your container (before providing a mapped volume to 
 
 Example
 -------
-For running the database in the foreground:
+For running the database detached and then following the logs:
 ```
 docker run -d -p 5432:5432  \
     -e "PG_USER=my_username" \
     -e "PG_PASSWORD=my_password" \
     -e "DB_NAME=my_db" \
     --restart=unless-stopped \
-    --volume=/path/to/local/folder:/postgresql/9.6/main \
+    --volume=/path/to/data:/postgresql/9.6/main \
     shongololo/postgis
 docker logs -f <docker image id>
 ```
 
-If you are running the container using an existing folder that already contains a configured database, then you can omit the environment flags. If you omit the environment arguments and a database has not already been initialised, then the default values will be used.
+If you are running the container using an existing folder that already contains a configured database, then you can omit the environment flags. Note that if you omit the environment arguments when initialising a new  database, then the default values will be used.
 
 Using with SSL
 --------------
@@ -54,8 +54,8 @@ docker run -d -p 5432:5432  \
     -e "PG_PASSWORD=my_password" \
     -e "DB_NAME=my_db" \
     --restart=unless-stopped \
-    --volume=/path/to/local/folder:/postgresql/9.6/main \
-    --volume=/path/to/local/ssl/files:/postgresql/9.6/ssl` \
+    --volume=/path/to/data:/postgresql/9.6/main \
+    --volume=/path/to/ssl:/postgresql/9.6/ssl` \
     shongololo/postgis
 docker logs -f <docker image id>
 ```
@@ -74,9 +74,9 @@ docker logs -f <docker image id>
 > # install the certificate and key file to your folder path
 > mkdir /path/to/local/ssl/files
 > ~/.acme.sh/acme.sh --installcert -d my_domain.com \
->     --certpath    /path/to/local/ssl/files/server.crt \
->     --keypath     /path/to/local/ssl/files/server.key
-> sudo chmod 0600 /path/to/local/ssl/files/server.key
+>     --certpath    /path/to/ssl/server.crt \
+>     --keypath     /path/to/ssl/server.key
+> sudo chmod 0600 /path/to/ssl/server.key
 > ```
 
 Configuration Parameters
