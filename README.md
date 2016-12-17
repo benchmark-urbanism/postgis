@@ -93,3 +93,6 @@ The default configured settings are based on 4GB of RAM and a maximum 50 connect
 >checkpoint_completion_target = 0.9  
 >wal_buffers = 16MB  
 >default_statistics_target = 100  
+
+[![](https://images.microbadger.com/badges/image/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own version badge on microbadger.com")
