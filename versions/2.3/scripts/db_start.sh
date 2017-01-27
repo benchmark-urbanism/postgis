@@ -36,6 +36,7 @@ then
 
     chown -R postgres:postgres /postgresql/9.6/main
     chmod 0600 /postgresql/9.6/main
+
     gosu postgres /usr/lib/postgresql/9.6/bin/pg_ctl initdb -D /postgresql/9.6/main -o '--locale=en_GB.UTF-8'
     gosu postgres /usr/lib/postgresql/9.6/bin/pg_ctl start -w -D /postgresql/9.6/main
 
@@ -117,6 +118,10 @@ else
     # set starting database configuration parameters
     export POSTGIS_ENABLE_OUTDB_RASTERS=1
     export POSTGIS_GDAL_ENABLED_DRIVERS=ENABLE_ALL
+
+    # repair permissions on existing folders in case permissions were changed by other processes
+    chown -R postgres:postgres /postgresql/9.6/main
+    chmod 0700 /postgresql/9.6/main
 
     if [ ! -f postgresql/9.6/ssl/server.crt ]; then
           printf "\nNOTE -> No certificate file provided -> disabling SSL if present\n"
