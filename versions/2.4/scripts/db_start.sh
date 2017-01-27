@@ -119,7 +119,7 @@ else
     export POSTGIS_ENABLE_OUTDB_RASTERS=1
     export POSTGIS_GDAL_ENABLED_DRIVERS=ENABLE_ALL
 
-    # repair permissions on existing folders in case permissions were changed by other processes
+    # verify permissions on existing folders
     chown -R postgres:postgres /postgresql/9.6/main
     chmod 0700 /postgresql/9.6/main
 
