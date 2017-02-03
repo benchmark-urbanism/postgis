@@ -118,6 +118,10 @@ else
     export POSTGIS_ENABLE_OUTDB_RASTERS=1
     export POSTGIS_GDAL_ENABLED_DRIVERS=ENABLE_ALL
 
+    # verify permissions on existing folders
+    chown -R postgres:postgres /postgresql/9.6/main
+    chmod 0700 /postgresql/9.6/main
+
     if [ ! -f postgresql/9.6/ssl/server.crt ]; then
           printf "\nNOTE -> No certificate file provided -> disabling SSL if present\n"
           export PGSSLMODE=disable
