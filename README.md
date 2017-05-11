@@ -1,4 +1,4 @@
-Postgres 9.6 with PostGIS 2.4 (Geos 3.6), with SFCGAL (1.3), pgrouting 2.3.1, raster, and SSL support. PostGIS 2.3 is available with the shongololo/postgis:2.3 tag.
+Postgres 9.6 with PostGIS 2.4 (Geos 3.6), with SFCGAL (1.3), pgrouting 2.4.1, raster, and SSL support. Older versions of PostGIS 2.4 and PostGIS 2.3 are available with the respective tags.
 
 Mapping the data volume path
 ----------------------------
@@ -61,7 +61,7 @@ docker logs -f <docker image id>
 ```
 
 
-> Provided you have a domain name mapped to your postgres server, then you can prepare a certificate and key file by using the free lets-enccrypt service.
+> Provided you have a domain name mapped to your postgres server, then you can prepare a certificate and key file by using the free lets-encrypt service.
 > For example:
 > ```bash
 > # install acme.sh
@@ -69,7 +69,7 @@ docker logs -f <docker image id>
 > wget -O - https://get.acme.sh | sh
 >
 > # generate the certificate for your domain
-> sudo ~/.acme.sh/acme.sh --issue --standalone -d my_domain.com
+> sudo ~/.acme.sh/acme.sh --issue --standalone -d your_domain.com
 >
 > # install the certificate and key file to your folder path
 > mkdir /path/to/local/ssl/files
