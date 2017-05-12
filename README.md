@@ -1,4 +1,4 @@
-Postgres 9.6 with PostGIS 2.4 (Geos 3.6), with SFCGAL (1.3), pgrouting 2.4.1, raster, and SSL support. Older versions of PostGIS 2.4 and PostGIS 2.3 are available with the respective tags.
+Postgres 9.6 with PostGIS 2.4 (Geos 3.6), SFCGAL (1.3), pgrouting 2.4.1, raster, and SSL support. Prior Postgis versions are available with the 2.4 and 2.3 tags.
 
 Mapping the data volume path
 ----------------------------
