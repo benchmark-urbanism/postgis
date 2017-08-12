@@ -5,7 +5,7 @@ MAINTAINER garethsimons@me.com
 RUN groupadd -r postgres && useradd -r -g postgres postgres
 
 # setup gosu for use from entrypoint script
-ENV GOSU_VERSION 1.9
+ENV GOSU_VERSION 1.10
 RUN set -x \
     && apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates wget \
@@ -51,46 +51,52 @@ RUN apt-get update \
         postgresql-contrib \
         postgresql-server-dev-all
 
-# geos 3.6
-RUN wget -O geos.tar.bz2 http://download.osgeo.org/geos/geos-3.6.0.tar.bz2 \
+# geos 3.6.2
+ENV GEOS_VERSION 3.6.2
+RUN wget -O geos.tar.bz2 http://download.osgeo.org/geos/geos-$GEOS_VERSION.tar.bz2 \
     && bzip2 -d geos.tar.bz2 \
     && tar -xf geos.tar \
-    && cd geos-3.6.0 \
+    && cd geos-$GEOS_VERSION \
     && ./configure \
     && make \
     && make install \
     && cd .. \
-    && rm -r geos-3.6.0 geos.tar
+    && rm -r geos-$GEOS_VERSION geos.tar
 
 # SFCGAL
-RUN wget -O sfcgal.tar.gz https://github.com/Oslandia/SFCGAL/archive/v1.3.0.tar.gz \
+ENV SFCGAL_VERSION 1.3.1
+RUN wget -O sfcgal.tar.gz https://github.com/Oslandia/SFCGAL/archive/v$SFCGAL_VERSION.tar.gz \
     && tar xf sfcgal.tar.gz \
-    && cd SFCGAL-1.3.0 \
+    && cd SFCGAL-$SFCGAL_VERSION \
     && cmake . \
     && make \
     && make install \
     && cd .. \
-    && rm -r SFCGAL-1.3.0 sfcgal.tar.gz
+    && rm -r SFCGAL-$SFCGAL_VERSION sfcgal.tar.gz
 
 # postGIS
-RUN wget -O postgis.tar.gz http://postgis.net/stuff/postgis-2.4.0dev.tar.gz \
+ENV POSTGIS_VERSION 2.4.0dev
+RUN wget -O postgis.tar.gz http://postgis.net/stuff/postgis-$POSTGIS_VERSION.tar.gz \
     && tar xf postgis.tar.gz \
-    && cd postgis-2.4.0dev \
+    && cd postgis-$POSTGIS_VERSION \
     && ./configure \
     && make \
     && make install \
     && cd .. \
-    && rm -r postgis-2.4.0dev postgis.tar.gz
+    && rm -r postgis-$POSTGIS_VERSION postgis.tar.gz
 
-# pgrouting
-RUN wget -O pgrouting.tar.gz https://github.com/pgRouting/pgrouting/archive/v2.3.1.tar.gz \
+# pgrouting (requires build directory)
+ENV PGROUTING_VERSION 2.4.1
+RUN wget -O pgrouting.tar.gz https://github.com/pgRouting/pgrouting/archive/v$PGROUTING_VERSION.tar.gz \
     && tar xf pgrouting.tar.gz \
-    && cd pgrouting-2.3.1 \
-    && cmake . \
+    && cd pgrouting-$PGROUTING_VERSION \
+    && mkdir build_dir \
+    && cd build_dir \
+    && cmake .. \
     && make \
     && make install \
-    && cd .. \
-    && rm -r pgrouting-2.3.1 pgrouting.tar.gz
+    && cd ../.. \
+    && rm -r pgrouting-$PGROUTING_VERSION pgrouting.tar.gz
 
 # cleanup
 RUN apt-get purge -y --auto-remove build-essential cmake ca-certificates wget bzip2 \
