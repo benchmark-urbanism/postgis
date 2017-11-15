@@ -1,10 +1,12 @@
-Postgres 9.6 with PostGIS 2.4 (Geos 3.6), SFCGAL (1.3), pgrouting 2.4.1, raster, and SSL support. Prior Postgis versions are available with the 2.4 and 2.3 tags.
+Postgres 10 with PostGIS 2.4.1 (Geos 3.6.2), SFCGAL (1.3.1), pgrouting 2.5.2, raster, and SSL support. Prior Postgis versions are available with the 2.4 and 2.3 tags.
+
+> The version tagged 2.3 uses PostGIS with 2.3 on Postgres 9.6
 
 Mapping the data volume path
 ----------------------------
-- This container maps the `/postgresql/9.6/main` volume path. If you do not map a local directory path to this volume, then it will create a new database setup inside the container. This data WILL NOT persist if you delete the container.
+- This container maps the `/postgresql/10/main` volume path. If you do not map a local directory path to this volume, then it will create a new database setup inside the container. This data WILL NOT persist if you delete the container.
 
-- If you map the volume `/postgresql/9.6/main` to a local directory path, and if this directory is empty, then a new database will be initialised in this location.
+- If you map the volume `/postgresql/10/main` to a local directory path, and if this directory is empty, then a new database will be initialised in this location.
 
 - If this locally mapped directory is not empty, then the container will try to reuse an existing database if present inside this directory. If it is not able to do so, or if the folder contains other files or folders, then you will encounter an error.
 
@@ -35,10 +37,11 @@ docker run -d -p 5432:5432  \
     -e "PG_PASSWORD=my_password" \
     -e "DB_NAME=my_db" \
     --restart=unless-stopped \
-    --volume=/path/to/data:/postgresql/9.6/main \
+    --volume=/path/to/data:/postgresql/10/main \
     shongololo/postgis
 docker logs -f <docker image id>
 ```
+> For prior postgres versions, use the corresponding version number in the directory paths, for example `--volume=/path/to/data:/postgresql/9.6/main`
 
 If you are running the container using an existing folder that already contains a configured database, then you can omit the environment flags. Note that if you omit the environment arguments when initialising a new  database, then the default values will be used.
 
@@ -46,7 +49,7 @@ Using with SSL
 --------------
 
 To use SSL, prepare a `server.crt` (certificate file) and `server.key` (key file) and place these in a folder.
-Then map the folder to the container's `/postgresql/9.6/ssl/` path by passing an additional volume flag, i.e.:
+Then map the folder to the container's `/postgresql/10/ssl/` path by passing an additional volume flag, i.e.:
 
 ```
 docker run -d -p 5432:5432  \
@@ -54,12 +57,12 @@ docker run -d -p 5432:5432  \
     -e "PG_PASSWORD=my_password" \
     -e "DB_NAME=my_db" \
     --restart=unless-stopped \
-    --volume=/path/to/data:/postgresql/9.6/main \
-    --volume=/path/to/ssl:/postgresql/9.6/ssl` \
+    --volume=/path/to/data:/postgresql/10/main \
+    --volume=/path/to/ssl:/postgresql/10/ssl` \
     shongololo/postgis
 docker logs -f <docker image id>
 ```
-
+> For prior postgres versions, use the corresponding version number in the directory paths, for example `--volume=/path/to/data:/postgresql/9.6/main`
 
 > Provided you have a domain name mapped to your postgres server, then you can prepare a certificate and key file by using the free lets-encrypt service.
 > For example:
