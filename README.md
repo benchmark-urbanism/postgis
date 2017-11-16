@@ -1,6 +1,8 @@
-Postgres 10 with PostGIS 2.4.1 (Geos 3.6.2), SFCGAL (1.3.1), pgrouting 2.5.2, raster, and SSL support. Prior Postgis versions are available with the 2.4 and 2.3 tags.
+Postgres 10 with PostGIS 2.4, SFCGAL, and pgrouting 2.5, plus raster and SSL support.
 
-> The version tagged 2.3 uses PostGIS with 2.3 on Postgres 9.6
+- `latest`: Postgres 10 + PostGIS 2.4.1 (Geos 3.6.2), SFCGAL 1.3.2 (CGAL 4.10.1), pgrouting 2.5.2
+- `2.4`: Postgres 10 + PostGIS 2.4.1 (Geos 3.6.2), SFCGAL 1.3.2 (CGAL 4.10.1), pgrouting 2.5.2
+- `2.3`: Postgres 9.6 + PostGIS 2.3.2 (Geos 3.6.0), SFCGAL 1.3.0 (CGAL 4.10.1), pgrouting 2.3.1
 
 Mapping the data volume path
 ----------------------------
@@ -9,6 +11,8 @@ Mapping the data volume path
 - If you map the volume `/postgresql/10/main` to a local directory path, and if this directory is empty, then a new database will be initialised in this location.
 
 - If this locally mapped directory is not empty, then the container will try to reuse an existing database if present inside this directory. If it is not able to do so, or if the folder contains other files or folders, then you will encounter an error.
+
+> For tag `2.3` use the corresponding version `9.6` paths instead: e.g. `/postgresql/9.6/main`
 
 Environment variables
 ---------------------
@@ -41,7 +45,6 @@ docker run -d -p 5432:5432  \
     shongololo/postgis
 docker logs -f <docker image id>
 ```
-> For prior postgres versions, use the corresponding version number in the directory paths, for example `--volume=/path/to/data:/postgresql/9.6/main`
 
 If you are running the container using an existing folder that already contains a configured database, then you can omit the environment flags. Note that if you omit the environment arguments when initialising a new  database, then the default values will be used.
 
@@ -62,7 +65,6 @@ docker run -d -p 5432:5432  \
     shongololo/postgis
 docker logs -f <docker image id>
 ```
-> For prior postgres versions, use the corresponding version number in the directory paths, for example `--volume=/path/to/data:/postgresql/9.6/main`
 
 > Provided you have a domain name mapped to your postgres server, then you can prepare a certificate and key file by using the free lets-encrypt service.
 > For example:
