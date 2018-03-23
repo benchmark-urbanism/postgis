@@ -24,7 +24,7 @@ Environment Variable | Default | Description
 `PG_PASSWORD` | none | Optional password.
 `DB_NAME` | `my_db` | The name for the new database.
 
-> If you initialise the database without a password and then add a password at a later stage, then you'll likely also want to modify the `pg_hba.conf` file in your mapped data directory to require md5 password authentication for connections. For example, change this line:  
+If you initialise the database without a password and then add a password at a later stage, then you'll likely also want to modify the `pg_hba.conf` file in your mapped data directory to require md5 password authentication for connections. For example, change this line:  
 `host    all             all             0.0.0.0/0               trust`  
 to:  
 `host    all             all             0.0.0.0/0               md5`  
