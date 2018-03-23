@@ -14,39 +14,44 @@ then
     echo "Present data path directory contents. Note that if this folder is not empty, then an error will be returned."
     ls /postgresql/$PG_VERSION/main
 
-    # check whether POSTGRES_USER, POSTGRES_PASS, and DB_NAME have been supplied via environment variables. If not, use defaults.
-    if [ -z "$PG_USER" ]; then
-      export PG_USER=my_username
-      printf "\nNOTE -> Using default PG_USER value: $PG_USER\n"
-    else
-      printf "\nNOTE -> Using supplied PG_USER value: $PG_USER\n"
-    fi
-
-    if [ -z "$PG_PASSWORD" ]; then
-      export PG_PASSWORD=my_password
-      printf "\nNOTE -> Using default PG_PASSWORD value: $PG_PASSWORD\n"
-    else
-      printf "\nNOTE -> Using supplied PG_PASSWORD value: $PG_PASSWORD\n"
-    fi
-
-    if [ -z "$DB_NAME" ]; then
-      export DB_NAME=my_db
-      printf "\nNOTE -> Using default DB_NAME value: $DB_NAME\n"
-    else
-      printf "\nNOTE -> Using supplied DB_NAME value: $DB_NAME\n"
-    fi
-
+    echo "Setting permissions on folders"
     chown -R postgres:postgres /postgresql/$PG_VERSION/main
     chmod 0600 /postgresql/$PG_VERSION/main
     gosu postgres /usr/lib/postgresql/$PG_VERSION/bin/pg_ctl initdb -D /postgresql/$PG_VERSION/main -o '--locale=en_GB.UTF-8'
     gosu postgres /usr/lib/postgresql/$PG_VERSION/bin/pg_ctl start -w -D /postgresql/$PG_VERSION/main
 
-    # setup basic database and permissions
-    gosu postgres psql -v ON_ERROR_STOP=1 << EOF
-        ALTER USER postgres WITH PASSWORD '$PG_PASSWORD';
-        CREATE ROLE $PG_USER LOGIN PASSWORD '$PG_PASSWORD';
-        CREATE DATABASE $DB_NAME OWNER $PG_USER;
+    # check whether POSTGRES_USER, POSTGRES_PASS, and DB_NAME have been supplied via environment variables. If not, use defaults.
+    if [ -z "$PG_USER" ]; then
+      export PG_USER=my_username
+      printf "NOTE -> Using default PG_USER value: $PG_USER\n"
+    else
+      printf "NOTE -> Using supplied PG_USER value: $PG_USER\n"
+    fi
+
+    if [ -z "$DB_NAME" ]; then
+      export DB_NAME=my_db
+      printf "NOTE -> Using default DB_NAME value: $DB_NAME\n"
+    else
+      printf "NOTE -> Using supplied DB_NAME value: $DB_NAME\n"
+    fi
+
+    # use no password by default
+    if [ -z "$PG_PASSWORD" ]; then
+      printf "NOTE -> No PG_PASSWORD value supplied, no password will be set for 'postgres' and '$PG_USER' users\n"
+      # setup basic database and permissions
+      gosu postgres psql -v ON_ERROR_STOP=1 << EOF
+          CREATE ROLE $PG_USER LOGIN;
+          CREATE DATABASE $DB_NAME OWNER $PG_USER;
 EOF
+    else
+      printf "NOTE -> Using supplied PG_PASSWORD value: $PG_PASSWORD for 'postgres' and '$PG_USER' users\n"
+      # setup basic database and permissions
+      gosu postgres psql -v ON_ERROR_STOP=1 << EOF
+          ALTER USER postgres WITH PASSWORD '$PG_PASSWORD';
+          CREATE ROLE $PG_USER LOGIN PASSWORD '$PG_PASSWORD';
+          CREATE DATABASE $DB_NAME OWNER $PG_USER;
+EOF
+    fi
 
     gosu postgres psql -v ON_ERROR_STOP=1 --dbname=$DB_NAME << EOF
         CREATE EXTENSION adminpack;
@@ -69,14 +74,14 @@ EOF
 
     # add SSL if certificate and key files provided
     if [ ! -f postgresql/$PG_VERSION/ssl/server.crt ]; then
-      printf "\nNOTE -> No certificate file provided -> not enabling SSL\n"
+      printf "NOTE -> No certificate file provided -> not enabling SSL\n"
       echo "ssl = off" >> /postgresql/$PG_VERSION/main/postgresql.conf
     else
         if [ ! -f postgresql/$PG_VERSION/ssl/server.key ]; then
-            printf "\nNOTE -> No key file provided -> not enabling SSL\n"
+            printf "NOTE -> No key file provided -> not enabling SSL\n"
             echo "ssl = off" >> /postgresql/$PG_VERSION/main/postgresql.conf
         else
-            printf "\nNOTE -> found server certificate and key -> enabling SSL\n"
+            printf "NOTE -> found server certificate and key -> enabling SSL\n"
             echo "ssl = on" >> /postgresql/$PG_VERSION/main/postgresql.conf
             echo "ssl_cert_file = '/postgresql/$PG_VERSION/ssl/server.crt'" >> /postgresql/$PG_VERSION/main/postgresql.conf
             chown postgres:postgres /postgresql/$PG_VERSION/ssl/server.key
@@ -85,27 +90,24 @@ EOF
         fi
     fi
 
-    # SEE http://pgtune.leopard.in.ua -> presently based on 4GB mixed purpose at 50 max connections
-    echo 'max_connections = 50' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    # some say to set shared_buffers to a 1/4 of your memory
-    echo 'shared_buffers = 1GB' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    echo 'effective_cache_size = 3GB' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    # work_mem is used per table per user, e.g. 4 tables * 5 users * 100 = 2000 * parallel workers...
-    echo 'work_mem=10485kB' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    # typically only one of these at a time, so it is safe to use larger values
-    echo 'maintenance_work_mem = 256MB' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    echo 'min_wal_size = 1GB' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    echo 'max_wal_size = 2GB' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    echo 'checkpoint_completion_target = 0.9' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    echo 'wal_buffers = 16MB' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    echo 'default_statistics_target = 100' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    # effective_io_concurrency -> for SSDs set higher
-    echo 'effective_io_concurrency=2' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    # max_worker_processes -> default is 8
-    echo 'max_worker_processes=8' >> /postgresql/$PG_VERSION/main/postgresql.conf
-    # max_parallel_workers_per_gather -> these workers are taken from the max_worker_processes
-    echo 'max_parallel_workers_per_gather=4' >> /postgresql/$PG_VERSION/main/postgresql.conf
-
+    # SEE http://pgtune.leopard.in.ua -> presently based on 4GB, 4CPU, HDD, mixed purpose at 50 max connections
+    gosu postgres psql -v ON_ERROR_STOP=1 << EOF
+        ALTER SYSTEM SET max_connections = '50';
+        ALTER SYSTEM SET shared_buffers = '1GB';
+        ALTER SYSTEM SET effective_cache_size = '3GB';
+        ALTER SYSTEM SET work_mem = '10485kB';
+        ALTER SYSTEM SET maintenance_work_mem = '256MB';
+        ALTER SYSTEM SET min_wal_size = '1GB';
+        ALTER SYSTEM SET max_wal_size = '2GB';
+        ALTER SYSTEM SET checkpoint_completion_target = '0.9';
+        ALTER SYSTEM SET wal_buffers = '16MB';
+        ALTER SYSTEM SET default_statistics_target = '100';
+        ALTER SYSTEM SET random_page_cost = '4';
+        ALTER SYSTEM SET effective_io_concurrency = '2';
+        ALTER SYSTEM SET max_worker_processes = '4';
+        ALTER SYSTEM SET max_parallel_workers_per_gather = '2';
+        ALTER SYSTEM SET max_parallel_workers = '4';
+EOF
     echo "Database setup completed. Restarting server in foreground:"
 
     gosu postgres /usr/lib/postgresql/$PG_VERSION/bin/pg_ctl stop -D /postgresql/$PG_VERSION/main -m smart
@@ -125,16 +127,16 @@ else
     chmod 0700 /postgresql/$PG_VERSION/main
 
     if [ ! -f postgresql/$PG_VERSION/ssl/server.crt ]; then
-          printf "\nNOTE -> No certificate file provided -> disabling SSL if present\n"
+          printf "NOTE -> No certificate file provided -> disabling SSL if present\n"
           export PGSSLMODE=disable
     else
         if [ ! -f postgresql/$PG_VERSION/ssl/server.key ]; then
-            printf "\nNOTE -> No key file provided -> disabling SSL if present\n"
+            printf "NOTE -> No key file provided -> disabling SSL if present\n"
             export PGSSLMODE=disable
         else
-            printf "\nNOTE -> found server certificate and key -> enabling SSL\n"
-            printf "\nHOWEVER... SSL will only work if DB initialised with SSL\n"
-            printf "\nOTHERWISE -> manually edit your postgresql.conf and set ssl = on\n"
+            printf "NOTE -> found server certificate and key -> enabling SSL\n"
+            printf "HOWEVER... SSL will only work if DB initialised with SSL\n"
+            printf "OTHERWISE -> manually edit your postgresql.conf and set ssl = on\n"
             sed "s/ssl = off/ssl = on/" /postgresql/$PG_VERSION/main/postgresql.conf
             export PGSSLMODE=require
         fi
