@@ -92,7 +92,7 @@ docker logs -f <docker image id>
 
 Configuration Parameters
 ------------------------
-The default configured settings are based on 4GB of RAM, 4 CPUs, a HDD, and a maximum 50 connections. The tuning parameters are set in accordance with [http://pgtune.leopard.in.ua](pgtune).
+The tuning parameters are set in accordance with [http://pgtune.leopard.in.ua](pgtune).
 
 > Assumed parameters:  
   DB Version: 10  
