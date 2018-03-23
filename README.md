@@ -1,7 +1,7 @@
 Postgres 10 with PostGIS 2.4, SFCGAL, and pgrouting 2.5, plus raster and SSL support.
 
-- `latest`: Postgres 10 + PostGIS 2.4.1 (Geos 3.6.2), SFCGAL 1.3.2 (CGAL 4.10.1), pgrouting 2.5.2
-- `2.4`: Postgres 10 + PostGIS 2.4.1 (Geos 3.6.2), SFCGAL 1.3.2 (CGAL 4.10.1), pgrouting 2.5.2
+- `latest`: Postgres 10 + PostGIS 2.4.3 (Geos 3.6.2), SFCGAL 1.3.2 (CGAL 4.11.1), pgrouting 2.5.2
+- `2.4`: Postgres 10 + PostGIS 2.4.3 (Geos 3.6.2), SFCGAL 1.3.2 (CGAL 4.11.1), pgrouting 2.5.2
 - `2.3`: Postgres 9.6 + PostGIS 2.3.2 (Geos 3.6.0), SFCGAL 1.3.0 (CGAL 4.10.1), pgrouting 2.3.1
 
 Mapping the data volume path

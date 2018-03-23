@@ -33,7 +33,7 @@ RUN wget -O geos.tar.bz2 http://download.osgeo.org/geos/geos-$GEOS_VERSION.tar.b
     && rm -r geos-$GEOS_VERSION geos.tar
 
 # CGAL
-ENV CGAL_VERSION 4.10.1
+ENV CGAL_VERSION 4.11.1
 RUN apt-get install -y --no-install-recommends libgmp-dev libmpfr-dev libboost-dev libboost-thread-dev
 RUN wget -O cgal.tar.gz https://github.com/CGAL/cgal/releases/download/releases/CGAL-$CGAL_VERSION/CGAL-$CGAL_VERSION.tar.xz \
     && tar xf cgal.tar.gz \
@@ -57,7 +57,7 @@ RUN wget -O sfcgal.tar.gz https://github.com/Oslandia/SFCGAL/archive/v$SFCGAL_VE
 
 # postGIS
     # libjson-c-dev libpcre3-dev
-ENV POSTGIS_VERSION 2.4.1
+ENV POSTGIS_VERSION 2.4.3
 RUN apt-get install -y --no-install-recommends postgresql-server-dev-$POSTGRES_VERSION \
     libxml2-dev libproj-dev libgdal-dev
 RUN wget -O postgis.tar.gz http://download.osgeo.org/postgis/source/postgis-$POSTGIS_VERSION.tar.gz \
