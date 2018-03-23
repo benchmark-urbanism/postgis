@@ -106,6 +106,8 @@ The tuning parameters are set in accordance with [http://pgtune.leopard.in.ua](p
   Total Memory (RAM): 4 GB  
   Number of Connections: 50
 
+The parameters are modified using the `ALTER SYSTEM` command which writes the custom configuration settings to the `postgresql.auto.conf` file, which overrides the default settings in `postgresql.conf`. This file should not be modified manually.
+
 Configuration:
 - max_connections = 50
 - shared_buffers = 1GB
@@ -123,7 +125,11 @@ Configuration:
 - max_parallel_workers_per_gather = 2
 - max_parallel_workers = 4
 
-It is worth considering updating these parameters if you are using an SSD drive or large amounts of RAM. For customisation you can use the [`ALTER SYSTEM`](https://www.postgresql.org/docs/10/static/sql-altersystem.html) command or directly edit the `postgresql.conf ` file inside your mapped data path directory.
+It is worth considering updating these parameters if you are using an SSD drive or large amounts of RAM. For customisation, connect as the `postgres` superuser then use the [`ALTER SYSTEM`](https://www.postgresql.org/docs/10/static/sql-altersystem.html) command to update the desired configuration settings, then restart the database, for example:
+```postgresql
+ALTER SYSTEM SET max_connections = '100';
+SELECT pg_reload_conf();
+```
 
 [![](https://images.microbadger.com/badges/image/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own version badge on microbadger.com")
