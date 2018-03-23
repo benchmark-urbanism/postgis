@@ -24,7 +24,9 @@ Environment Variable | Default | Description
 `PG_PASSWORD` | none | Optional password.
 `DB_NAME` | `my_db` | The name for the new database.
 
-If you initialise the database without a password and then add a password at a later stage, then you'll likely also want to modify the `pg_hba.conf` file in your mapped data directory to require md5 password authentication for connections. For example, change this line:  
+The new user will have general permissions on the new database. The user is also granted membership to the `postgres` super-user. This means that `SET ROLE postgres;` can be used to grant temporary permissions for superuser tasks such as activating extensions. Once admin tasks are completed, user permissions can be reset per `RESET ROLE;`
+
+If you initialise the database without a password and then add a password at a later stage, then you'll likely also want to modify the `pg_hba.conf` file in your mapped data directory to require md5 password authentication for connections. For example, you may want to change this line:  
 `host    all             all             0.0.0.0/0               trust`  
 to:  
 `host    all             all             0.0.0.0/0               md5`  
@@ -127,7 +129,10 @@ Configuration:
 
 It is worth considering updating these parameters if you are using an SSD drive or large amounts of RAM. For customisation, connect as the `postgres` superuser then use the [`ALTER SYSTEM`](https://www.postgresql.org/docs/10/static/sql-altersystem.html) command to update the desired configuration settings, then restart the database, for example:
 ```postgresql
+SET ROLE postgres;
 ALTER SYSTEM SET max_connections = '100';
+RESET ROLE;
+SELECT pg_reload_conf();
 ```
 
 [![](https://images.microbadger.com/badges/image/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own image badge on microbadger.com")

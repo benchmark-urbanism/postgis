@@ -61,8 +61,12 @@ EOF
 EOF
     fi
 
+    # allow the new user to SET ROLE to postgres user for future admin tasks
+    # and setup general purpose extensions
     gosu postgres psql -v ON_ERROR_STOP=1 --dbname=$DB_NAME << EOF
+        GRANT postgres TO $PG_USER;
         CREATE EXTENSION adminpack;
+        CREATE EXTENSION pg_trgm;
         CREATE EXTENSION hstore;
         CREATE EXTENSION postgis;
         CREATE EXTENSION postgis_topology;
