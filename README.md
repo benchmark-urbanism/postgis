@@ -21,7 +21,7 @@ The following environment variables can be set for configuring a new database.
 Environment Variable | Default | Description
 ------------------------|---------|--------------
 `PG_USER` |  `my_username` | The username for your database role (user).
-`PG_PASSWORD` | `my_password` | Your password.
+`PG_PASSWORD` | no password | Optional password.
 `DB_NAME` | `my_db` | The name for the new database.
 
 Port Mapping
@@ -34,8 +34,8 @@ If you first upload data to your container (before providing a mapped volume to 
 
 Example
 -------
-For running the database detached and then following the logs:
-```
+For running the database detached:
+```bash
 docker run -d -p 5432:5432  \
     -e "PG_USER=my_username" \
     -e "PG_PASSWORD=my_password" \
@@ -43,6 +43,9 @@ docker run -d -p 5432:5432  \
     --restart=unless-stopped \
     --volume=/path/to/data:/postgresql/10/main \
     shongololo/postgis
+```
+You can then follow the logs:
+```bash
 docker logs -f <docker image id>
 ```
 
@@ -63,6 +66,9 @@ docker run -d -p 5432:5432  \
     --volume=/path/to/data:/postgresql/10/main \
     --volume=/path/to/ssl:/postgresql/10/ssl` \
     shongololo/postgis
+```
+You can then follow the logs:
+```bash
 docker logs -f <docker image id>
 ```
 
@@ -86,18 +92,32 @@ docker logs -f <docker image id>
 
 Configuration Parameters
 ------------------------
-The default configured settings are based on 4GB of RAM and a maximum 50 connections. The tuning parameters are set in accordance with [http://pgtune.leopard.in.ua](pgtune). You can edit the `postgresql.conf ` file inside your mapped data path directory for further customisation. These will have been appended to the end of the file and should be modified there.
+The default configured settings are based on 4GB of RAM, 4 CPUs, a HDD, and a maximum 50 connections. The tuning parameters are set in accordance with [http://pgtune.leopard.in.ua](pgtune).
 
->max_connections = 50  
->shared_buffers = 1GB  
->effective_cache_size = 3GB  
->work_mem = 10485kB  
->maintenance_work_mem = 256MB  
->min_wal_size = 1GB  
->max_wal_size = 2GB  
->checkpoint_completion_target = 0.9  
->wal_buffers = 16MB  
->default_statistics_target = 100  
+> It is worth considering updating these parameters if you are using an SSD drive or large amounts of RAM. For customisation you can use the [`ALTER SYSTEM`](https://www.postgresql.org/docs/10/static/sql-altersystem.html) command or directly edit the `postgresql.conf ` file inside your mapped data path directory.
+
+> Assumed parameters:
+> DB Version: 10
+> OS Type: linux
+> DB Type: mixed
+> Total Memory (RAM): 4 GB
+> Number of Connections: 50
+>
+> max_connections = 50
+> shared_buffers = 1GB
+> effective_cache_size = 3GB
+> work_mem = 10485kB
+> maintenance_work_mem = 256MB
+> min_wal_size = 1GB
+> max_wal_size = 2GB
+> checkpoint_completion_target = 0.9
+> wal_buffers = 16MB
+> default_statistics_target = 100
+> random_page_cost = 4
+> effective_io_concurrency = 2
+> max_worker_processes = 4
+> max_parallel_workers_per_gather = 2
+> max_parallel_workers = 4
 
 [![](https://images.microbadger.com/badges/image/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own version badge on microbadger.com")
