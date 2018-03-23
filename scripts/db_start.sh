@@ -35,9 +35,15 @@ then
       printf "NOTE -> Using supplied DB_NAME value: $DB_NAME\n"
     fi
 
+    # setup configs and create user
+    echo "local     all     all                 trust" >> /postgresql/$PG_VERSION/main/pg_hba.conf
+    echo "listen_addresses='*'" >> /postgresql/$PG_VERSION/main/postgresql.conf
+
     # use no password by default
     if [ -z "$PG_PASSWORD" ]; then
       printf "NOTE -> No PG_PASSWORD value supplied, no password will be set for 'postgres' and '$PG_USER' users\n"
+      # setup pg_hba permissions
+      echo "host      all     all     0.0.0.0/0   trust" >> /postgresql/$PG_VERSION/main/pg_hba.conf
       # setup basic database and permissions
       gosu postgres psql -v ON_ERROR_STOP=1 << EOF
           CREATE ROLE $PG_USER LOGIN;
@@ -45,6 +51,8 @@ then
 EOF
     else
       printf "NOTE -> Using supplied PG_PASSWORD value: $PG_PASSWORD for 'postgres' and '$PG_USER' users\n"
+      # setup pg_hba permissions
+      echo "host      all     all     0.0.0.0/0   md5" >> /postgresql/$PG_VERSION/main/pg_hba.conf
       # setup basic database and permissions
       gosu postgres psql -v ON_ERROR_STOP=1 << EOF
           ALTER USER postgres WITH PASSWORD '$PG_PASSWORD';
@@ -66,11 +74,6 @@ EOF
         SET postgis.gdal_enabled_drivers = 'ENABLE_ALL';
         SET postgis.enable_outdb_rasters = True;
 EOF
-
-    # setup configs
-    echo "local     all     all                 trust" >> /postgresql/$PG_VERSION/main/pg_hba.conf
-    echo "host      all     all     0.0.0.0/0   md5" >> /postgresql/$PG_VERSION/main/pg_hba.conf
-    echo "listen_addresses='*'" >> /postgresql/$PG_VERSION/main/postgresql.conf
 
     # add SSL if certificate and key files provided
     if [ ! -f postgresql/$PG_VERSION/ssl/server.crt ]; then

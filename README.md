@@ -21,8 +21,13 @@ The following environment variables can be set for configuring a new database.
 Environment Variable | Default | Description
 ------------------------|---------|--------------
 `PG_USER` |  `my_username` | The username for your database role (user).
-`PG_PASSWORD` | no password | Optional password.
+`PG_PASSWORD` | none | Optional password.
 `DB_NAME` | `my_db` | The name for the new database.
+
+> If you initialise the database without a password and then add a password at a later stage, then you'll likely also want to modify the `pg_hba.conf` file in your mapped data directory to require md5 password authentication for connections. For example, change this line:  
+`host    all             all             0.0.0.0/0               trust`  
+to:  
+`host    all             all             0.0.0.0/0               md5`  
 
 Port Mapping
 ------------
