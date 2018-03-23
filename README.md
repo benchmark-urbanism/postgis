@@ -128,7 +128,6 @@ Configuration:
 It is worth considering updating these parameters if you are using an SSD drive or large amounts of RAM. For customisation, connect as the `postgres` superuser then use the [`ALTER SYSTEM`](https://www.postgresql.org/docs/10/static/sql-altersystem.html) command to update the desired configuration settings, then restart the database, for example:
 ```postgresql
 ALTER SYSTEM SET max_connections = '100';
-SELECT pg_reload_conf();
 ```
 
 [![](https://images.microbadger.com/badges/image/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own image badge on microbadger.com")
