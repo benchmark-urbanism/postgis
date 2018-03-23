@@ -94,30 +94,31 @@ Configuration Parameters
 ------------------------
 The default configured settings are based on 4GB of RAM, 4 CPUs, a HDD, and a maximum 50 connections. The tuning parameters are set in accordance with [http://pgtune.leopard.in.ua](pgtune).
 
-> It is worth considering updating these parameters if you are using an SSD drive or large amounts of RAM. For customisation you can use the [`ALTER SYSTEM`](https://www.postgresql.org/docs/10/static/sql-altersystem.html) command or directly edit the `postgresql.conf ` file inside your mapped data path directory.
+> Assumed parameters:  
+  DB Version: 10  
+  OS Type: linux  
+  DB Type: mixed  
+  Total Memory (RAM): 4 GB  
+  Number of Connections: 50
 
-> Assumed parameters:
-> DB Version: 10
-> OS Type: linux
-> DB Type: mixed
-> Total Memory (RAM): 4 GB
-> Number of Connections: 50
->
-> max_connections = 50
-> shared_buffers = 1GB
-> effective_cache_size = 3GB
-> work_mem = 10485kB
-> maintenance_work_mem = 256MB
-> min_wal_size = 1GB
-> max_wal_size = 2GB
-> checkpoint_completion_target = 0.9
-> wal_buffers = 16MB
-> default_statistics_target = 100
-> random_page_cost = 4
-> effective_io_concurrency = 2
-> max_worker_processes = 4
-> max_parallel_workers_per_gather = 2
-> max_parallel_workers = 4
+Configuration:
+- max_connections = 50
+- shared_buffers = 1GB
+- effective_cache_size = 3GB
+- work_mem = 10485kB
+- maintenance_work_mem = 256MB
+- min_wal_size = 1GB
+- max_wal_size = 2GB
+- checkpoint_completion_target = 0.9
+- wal_buffers = 16MB
+- default_statistics_target = 100
+- random_page_cost = 4
+- effective_io_concurrency = 2
+- max_worker_processes = 4
+- max_parallel_workers_per_gather = 2
+- max_parallel_workers = 4
+
+It is worth considering updating these parameters if you are using an SSD drive or large amounts of RAM. For customisation you can use the [`ALTER SYSTEM`](https://www.postgresql.org/docs/10/static/sql-altersystem.html) command or directly edit the `postgresql.conf ` file inside your mapped data path directory.
 
 [![](https://images.microbadger.com/badges/image/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own version badge on microbadger.com")
