@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:buster-slim
 
 MAINTAINER garethsimons@me.com
 
@@ -15,13 +15,13 @@ ENV POSTGRES_VERSION 10
 RUN apt-get update \
     && apt-get install --no-install-recommends -y build-essential gosu gnupg cmake ca-certificates wget bzip2 \
     && touch /etc/apt/sources.list.d/pgdg.list \
-    && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' \
+    && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' \
     && wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add - \
     && apt-get update \
     && apt-get install -y --no-install-recommends postgresql-$POSTGRES_VERSION postgresql-contrib
 
 # geos
-ENV GEOS_VERSION 3.6.2
+ENV GEOS_VERSION 3.6.3
 RUN wget -O geos.tar.bz2 http://download.osgeo.org/geos/geos-$GEOS_VERSION.tar.bz2 \
     && bzip2 -d geos.tar.bz2 \
     && tar -xf geos.tar \
@@ -33,7 +33,7 @@ RUN wget -O geos.tar.bz2 http://download.osgeo.org/geos/geos-$GEOS_VERSION.tar.b
     && rm -r geos-$GEOS_VERSION geos.tar
 
 # CGAL
-ENV CGAL_VERSION 4.11.1
+ENV CGAL_VERSION 4.11.3
 RUN apt-get install -y --no-install-recommends libgmp-dev libmpfr-dev libboost-dev libboost-thread-dev
 RUN wget -O cgal.tar.gz https://github.com/CGAL/cgal/releases/download/releases/CGAL-$CGAL_VERSION/CGAL-$CGAL_VERSION.tar.xz \
     && tar xf cgal.tar.gz \
@@ -45,7 +45,7 @@ RUN wget -O cgal.tar.gz https://github.com/CGAL/cgal/releases/download/releases/
     && rm -r CGAL-$CGAL_VERSION cgal.tar.gz
 
 # SFCGAL
-ENV SFCGAL_VERSION 1.3.2
+ENV SFCGAL_VERSION 1.3.5
 RUN wget -O sfcgal.tar.gz https://github.com/Oslandia/SFCGAL/archive/v$SFCGAL_VERSION.tar.gz \
     && tar xf sfcgal.tar.gz \
     && cd SFCGAL-$SFCGAL_VERSION \
@@ -57,7 +57,7 @@ RUN wget -O sfcgal.tar.gz https://github.com/Oslandia/SFCGAL/archive/v$SFCGAL_VE
 
 # postGIS
     # libjson-c-dev libpcre3-dev
-ENV POSTGIS_VERSION 2.4.3
+ENV POSTGIS_VERSION 2.4.4
 RUN apt-get install -y --no-install-recommends postgresql-server-dev-$POSTGRES_VERSION \
     libxml2-dev libproj-dev libgdal-dev
 RUN wget -O postgis.tar.gz http://download.osgeo.org/postgis/source/postgis-$POSTGIS_VERSION.tar.gz \
@@ -70,7 +70,7 @@ RUN wget -O postgis.tar.gz http://download.osgeo.org/postgis/source/postgis-$POS
     && rm -r postgis-$POSTGIS_VERSION postgis.tar.gz
 
 # pgrouting (requires build directory)
-ENV PGROUTING_VERSION 2.5.2
+ENV PGROUTING_VERSION 2.6.0
 RUN wget -O pgrouting.tar.gz https://github.com/pgRouting/pgrouting/archive/v$PGROUTING_VERSION.tar.gz \
     && tar xf pgrouting.tar.gz \
     && cd pgrouting-$PGROUTING_VERSION \

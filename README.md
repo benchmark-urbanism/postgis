@@ -1,7 +1,7 @@
-Postgres 10 with PostGIS 2.4, SFCGAL, and pgrouting 2.5, plus raster and SSL support.
+Postgres 10 with PostGIS 2.4, SFCGAL, and pgrouting 2.6, plus raster and SSL support.
 
-- `latest`: Postgres 10 + PostGIS 2.4.3 (Geos 3.6.2), SFCGAL 1.3.2 (CGAL 4.11.1), pgrouting 2.5.2
-- `2.4`: Postgres 10 + PostGIS 2.4.3 (Geos 3.6.2), SFCGAL 1.3.2 (CGAL 4.11.1), pgrouting 2.5.2
+- `latest`: Postgres 10 + PostGIS 2.4.4 (Geos 3.6.3), SFCGAL 1.3.5 (CGAL 4.11.3), pgrouting 2.6.0
+- `2.4`: Postgres 10 + PostGIS 2.4.4 (Geos 3.6.3), SFCGAL 1.3.5 (CGAL 4.11.3), pgrouting 2.6.0
 - `2.3`: Postgres 9.6 + PostGIS 2.3.2 (Geos 3.6.0), SFCGAL 1.3.0 (CGAL 4.10.1), pgrouting 2.3.1
 
 Mapping the data volume path
@@ -56,7 +56,7 @@ You can then follow the logs:
 docker logs -f <docker image id>
 ```
 
-If you are running the container using an existing folder that already contains a configured database, then you can omit the environment flags. Note that if you omit the environment arguments when initialising a new  database, then the default values will be used.
+If you are running the container using an existing folder that already contains a configured database, then you can omit the environment flags. Note that if you omit the environment arguments when initialising a new database, then the default values will be used.
 
 Using with SSL
 --------------
