@@ -1,8 +1,17 @@
-Docker Hub: https://hub.docker.com/r/cityseer/postgis/
-
-Docker Hub Tag: `cityseer/postgis`
-
 Postgres 11 with PostGIS 2.5, SFCGAL, and pgrouting 2.6.1, plus raster and SSL support.
+
+Docker Hub Repo
+---------------
+
+[https://hub.docker.com/r/cityseer/postgis/](cityseer/postgis)
+
+Docker Hub Tag
+--------------
+
+`cityseer/postgis`
+
+Versions
+--------
 
 - `latest`: Postgres 11 + PostGIS 2.5.0 (Geos 3.7.0), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.1
 - `2.5`: Postgres 11 + PostGIS 2.5.0 (Geos 3.7.0), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.1
