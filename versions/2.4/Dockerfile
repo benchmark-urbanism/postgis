@@ -45,7 +45,7 @@ RUN wget -O cgal.tar.gz https://github.com/CGAL/cgal/releases/download/releases/
     && rm -r CGAL-$CGAL_VERSION cgal.tar.gz
 
 # SFCGAL
-ENV SFCGAL_VERSION 1.3.5
+ENV SFCGAL_VERSION 1.3.6
 RUN wget -O sfcgal.tar.gz https://github.com/Oslandia/SFCGAL/archive/v$SFCGAL_VERSION.tar.gz \
     && tar xf sfcgal.tar.gz \
     && cd SFCGAL-$SFCGAL_VERSION \
@@ -56,8 +56,7 @@ RUN wget -O sfcgal.tar.gz https://github.com/Oslandia/SFCGAL/archive/v$SFCGAL_VE
     && rm -r SFCGAL-$SFCGAL_VERSION sfcgal.tar.gz
 
 # postGIS
-    # libjson-c-dev libpcre3-dev
-ENV POSTGIS_VERSION 2.4.4
+ENV POSTGIS_VERSION 2.4.5
 RUN apt-get install -y --no-install-recommends postgresql-server-dev-$POSTGRES_VERSION \
     libxml2-dev libproj-dev libgdal-dev
 RUN wget -O postgis.tar.gz http://download.osgeo.org/postgis/source/postgis-$POSTGIS_VERSION.tar.gz \
@@ -70,7 +69,7 @@ RUN wget -O postgis.tar.gz http://download.osgeo.org/postgis/source/postgis-$POS
     && rm -r postgis-$POSTGIS_VERSION postgis.tar.gz
 
 # pgrouting (requires build directory)
-ENV PGROUTING_VERSION 2.6.0
+ENV PGROUTING_VERSION 2.6.1
 RUN wget -O pgrouting.tar.gz https://github.com/pgRouting/pgrouting/archive/v$PGROUTING_VERSION.tar.gz \
     && tar xf pgrouting.tar.gz \
     && cd pgrouting-$PGROUTING_VERSION \
