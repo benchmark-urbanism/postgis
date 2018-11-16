@@ -1,18 +1,19 @@
 Postgres 10 with PostGIS 2.4, SFCGAL, and pgrouting 2.6, plus raster and SSL support.
 
-- `latest`: Postgres 10 + PostGIS 2.4.4 (Geos 3.6.3), SFCGAL 1.3.5 (CGAL 4.11.3), pgrouting 2.6.0
+- `latest`: Postgres 11 + PostGIS 2.5.0 (Geos 3.7.0), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.1
+- `2.5`: Postgres 11 + PostGIS 2.5.0 (Geos 3.7.0), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.1
 - `2.4`: Postgres 10 + PostGIS 2.4.4 (Geos 3.6.3), SFCGAL 1.3.5 (CGAL 4.11.3), pgrouting 2.6.0
 - `2.3`: Postgres 9.6 + PostGIS 2.3.2 (Geos 3.6.0), SFCGAL 1.3.0 (CGAL 4.10.1), pgrouting 2.3.1
 
 Mapping the data volume path
 ----------------------------
-- This container maps the `/postgresql/10/main` volume path. If you do not map a local directory path to this volume, then it will create a new database setup inside the container. This data WILL NOT persist if you delete the container.
+- This container maps the `/postgresql/11/main` volume path. If you do not map a local directory path to this volume, then it will create a new database setup inside the container. This data WILL NOT persist if you delete the container.
 
-- If you map the volume `/postgresql/10/main` to a local directory path, and if this directory is empty, then a new database will be initialised in this location.
+- If you map the volume `/postgresql/11/main` to a local directory path, and if this directory is empty, then a new database will be initialised in this location.
 
 - If this locally mapped directory is not empty, then the container will try to reuse an existing database if present inside this directory. If it is not able to do so, or if the folder contains other files or folders, then you will encounter an error.
 
-> For tag `2.3` use the corresponding version `9.6` paths instead: e.g. `/postgresql/9.6/main`
+> For tags `2.4` or `2.3`, use the corresponding postgres version numbers, e.g. `/postgresql/10/main` or `/postgresql/9.6/main`, respectively.
 
 Environment variables
 ---------------------
@@ -48,7 +49,7 @@ docker run -d -p 5432:5432  \
     -e "PG_PASSWORD=my_password" \
     -e "DB_NAME=my_db" \
     --restart=unless-stopped \
-    --volume=/path/to/data:/postgresql/10/main \
+    --volume=/path/to/data:/postgresql/11/main \
     shongololo/postgis
 ```
 You can then follow the logs:
@@ -62,7 +63,7 @@ Using with SSL
 --------------
 
 To use SSL, prepare a `server.crt` (certificate file) and `server.key` (key file) and place these in a folder.
-Then map the folder to the container's `/postgresql/10/ssl/` path by passing an additional volume flag, i.e.:
+Then map the folder to the container's `/postgresql/11/ssl/` path by passing an additional volume flag, i.e.:
 
 ```
 docker run -d -p 5432:5432  \
@@ -70,8 +71,8 @@ docker run -d -p 5432:5432  \
     -e "PG_PASSWORD=my_password" \
     -e "DB_NAME=my_db" \
     --restart=unless-stopped \
-    --volume=/path/to/data:/postgresql/10/main \
-    --volume=/path/to/ssl:/postgresql/10/ssl` \
+    --volume=/path/to/data:/postgresql/11/main \
+    --volume=/path/to/ssl:/postgresql/11/ssl` \
     shongololo/postgis
 ```
 You can then follow the logs:
@@ -102,11 +103,12 @@ Configuration Parameters
 The tuning parameters are set in accordance with [http://pgtune.leopard.in.ua](pgtune).
 
 > Assumed parameters:  
-  DB Version: 10  
+  DB Version: 11  
   OS Type: linux  
   DB Type: mixed  
   Total Memory (RAM): 4 GB  
   Number of Connections: 50
+  Data Storage: HDD
 
 The parameters are modified using the `ALTER SYSTEM` command which writes the custom configuration settings to the `postgresql.auto.conf` file, which overrides the default settings in `postgresql.conf`. This file should not be modified manually.
 
@@ -114,18 +116,15 @@ Configuration:
 - max_connections = 50
 - shared_buffers = 1GB
 - effective_cache_size = 3GB
-- work_mem = 10485kB
 - maintenance_work_mem = 256MB
-- min_wal_size = 1GB
-- max_wal_size = 2GB
 - checkpoint_completion_target = 0.9
 - wal_buffers = 16MB
 - default_statistics_target = 100
 - random_page_cost = 4
 - effective_io_concurrency = 2
-- max_worker_processes = 4
-- max_parallel_workers_per_gather = 2
-- max_parallel_workers = 4
+- work_mem = 10485kB
+- min_wal_size = 1GB
+- max_wal_size = 2GB
 
 It is worth considering updating these parameters if you are using an SSD drive or large amounts of RAM. For customisation, connect as the `postgres` superuser then use the [`ALTER SYSTEM`](https://www.postgresql.org/docs/10/static/sql-altersystem.html) command to update the desired configuration settings, then restart the database, for example:
 ```postgresql
