@@ -1,3 +1,6 @@
+Docker Hub: https://hub.docker.com/r/cityseer/postgis/
+Docker Hub Tag: `cityseer/postgis`
+
 Postgres 11 with PostGIS 2.5, SFCGAL, and pgrouting 2.6.1, plus raster and SSL support.
 
 - `latest`: Postgres 11 + PostGIS 2.5.0 (Geos 3.7.0), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.1
@@ -50,7 +53,7 @@ docker run -d -p 5432:5432  \
     -e "DB_NAME=my_db" \
     --restart=unless-stopped \
     --volume=/path/to/data:/postgresql/11/main \
-    shongololo/postgis
+    cityseer/postgis
 ```
 You can then follow the logs:
 ```bash
@@ -73,7 +76,7 @@ docker run -d -p 5432:5432  \
     --restart=unless-stopped \
     --volume=/path/to/data:/postgresql/11/main \
     --volume=/path/to/ssl:/postgresql/11/ssl` \
-    shongololo/postgis
+    cityseer/postgis
 ```
 You can then follow the logs:
 ```bash
@@ -134,5 +137,5 @@ RESET ROLE;
 SELECT pg_reload_conf();
 ```
 
-[![](https://images.microbadger.com/badges/image/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/shongololo/postgis.svg)](https://microbadger.com/images/shongololo/postgis "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/cityseer/postgis.svg)](https://microbadger.com/images/cityseer/postgis "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/cityseer/postgis.svg)](https://microbadger.com/images/cityseer/postgis "Get your own version badge on microbadger.com")
