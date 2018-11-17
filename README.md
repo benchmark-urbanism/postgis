@@ -15,8 +15,8 @@ Versions
 
 - `latest`: Postgres 11 + PostGIS 2.5.0 (Geos 3.7.0), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.1
 - `2.5`: Postgres 11 + PostGIS 2.5.0 (Geos 3.7.0), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.1
-- `2.4`: Postgres 10 + PostGIS 2.4.4 (Geos 3.6.3), SFCGAL 1.3.5 (CGAL 4.11.3), pgrouting 2.6.0
-- `2.3`: Postgres 9.6 + PostGIS 2.3.2 (Geos 3.6.0), SFCGAL 1.3.0 (CGAL 4.10.1), pgrouting 2.3.1
+- `2.4`: Postgres 10 + PostGIS 2.4.5 (Geos 3.6.3), SFCGAL 1.3.6 (CGAL 4.11.3), pgrouting 2.6.1
+- `2.3`: Postgres 9.6 + PostGIS 2.3.7 (Geos 3.6.3), SFCGAL 1.3.6 (CGAL 4.11.3), pgrouting 2.6.1
 
 Mapping the data volume path
 ----------------------------
