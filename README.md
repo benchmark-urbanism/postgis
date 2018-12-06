@@ -159,3 +159,6 @@ ALTER SYSTEM SET max_connections = '100';
 RESET ROLE;
 SELECT pg_reload_conf();
 ```
+Then restart the database.
+
+You can use the `current_setting` method check whether the settings have permeated, e.g. `SELECT current_setting('max_connections');`.
