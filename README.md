@@ -1,7 +1,17 @@
 Postgres 11 with PostGIS 2.5, SFCGAL, and pgrouting 2.6.1, plus raster and SSL support.
 
-[![](https://images.microbadger.com/badges/image/cityseer/postgis.svg)](https://microbadger.com/images/cityseer/postgis "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/cityseer/postgis.svg)](https://microbadger.com/images/cityseer/postgis "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/cityseer/postgis.svg)](https://microbadger.com/images/cityseer/postgis "Get your own image badge on microbadger.com")
+
+[![](https://images.microbadger.com/badges/version/cityseer/postgis:2.5.svg)](https://microbadger.com/images/cityseer/postgis:2.5 "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/cityseer/postgis:2.5.svg)](https://microbadger.com/images/cityseer/postgis:2.5 "Get your own image badge on microbadger.com")
+
+[![](https://images.microbadger.com/badges/version/cityseer/postgis:2.4.svg)](https://microbadger.com/images/cityseer/postgis:2.4 "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/cityseer/postgis:2.4.svg)](https://microbadger.com/images/cityseer/postgis:2.4 "Get your own image badge on microbadger.com")
+
+[![](https://images.microbadger.com/badges/version/cityseer/postgis:2.3.svg)](https://microbadger.com/images/cityseer/postgis:2.3 "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/cityseer/postgis:2.3.svg)](https://microbadger.com/images/cityseer/postgis:2.3 "Get your own image badge on microbadger.com")
+
 
 Docker Hub Repo
 ---------------
@@ -150,3 +160,6 @@ ALTER SYSTEM SET max_connections = '100';
 RESET ROLE;
 SELECT pg_reload_conf();
 ```
+Then restart the database.
+
+You can use the `current_setting` method check whether the settings have permeated, e.g. `SELECT current_setting('max_connections');`.
