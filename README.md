@@ -31,7 +31,7 @@ Versions
 
 - `latest`: Postgres 11 + PostGIS 2.5.1 (Geos 3.7.1), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.2
 - `2.5`: Postgres 11 + PostGIS 2.5.1 (Geos 3.7.1), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.2
-- `2.5_10`: Postgres 11 + PostGIS 2.5.1 (Geos 3.7.1), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.2
+- `2.5_10`: Postgres 10 + PostGIS 2.5.1 (Geos 3.7.1), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.2
 - `2.4`: Postgres 10 + PostGIS 2.4.5 (Geos 3.6.3), SFCGAL 1.3.6 (CGAL 4.11.3), pgrouting 2.6.1
 - `2.3`: Postgres 9.6 + PostGIS 2.3.7 (Geos 3.6.3), SFCGAL 1.3.6 (CGAL 4.11.3), pgrouting 2.6.1
 
