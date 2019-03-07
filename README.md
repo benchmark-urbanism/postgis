@@ -16,8 +16,9 @@ Docker Hub Tag
 Versions
 --------
 
-- `latest`: Postgres 11 + PostGIS 2.5.0 (Geos 3.7.0), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.1
-- `2.5`: Postgres 11 + PostGIS 2.5.0 (Geos 3.7.0), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.1
+- `latest`: Postgres 11 + PostGIS 2.5.1 (Geos 3.7.1), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.2
+- `2.5`: Postgres 11 + PostGIS 2.5.1 (Geos 3.7.1), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.2
+- `2.5_10`: Postgres 11 + PostGIS 2.5.1 (Geos 3.7.1), SFCGAL 1.3.6 (CGAL 4.13), pgrouting 2.6.2
 - `2.4`: Postgres 10 + PostGIS 2.4.5 (Geos 3.6.3), SFCGAL 1.3.6 (CGAL 4.11.3), pgrouting 2.6.1
 - `2.3`: Postgres 9.6 + PostGIS 2.3.7 (Geos 3.6.3), SFCGAL 1.3.6 (CGAL 4.11.3), pgrouting 2.6.1
 
@@ -29,7 +30,7 @@ Mapping the data volume path
 
 - If this locally mapped directory is not empty, then the container will try to reuse an existing database if present inside this directory. If it is not able to do so, or if the folder contains other files or folders, then you will encounter an error.
 
-> For tags `2.4` or `2.3`, use the corresponding postgres version numbers, e.g. `/postgresql/10/main` or `/postgresql/9.6/main`, respectively.
+> For tags `2.5_10`, `2.4` or `2.3`, use the corresponding postgres version numbers, e.g. `/postgresql/10/main` or `/postgresql/9.6/main`, respectively.
 
 Environment variables
 ---------------------
@@ -66,7 +67,7 @@ docker run -d -p 5432:5432  \
     -e "DB_NAME=my_db" \
     --restart=unless-stopped \
     --volume=/path/to/data:/postgresql/11/main \
-    cityseer/postgis
+    cityseer/postgis:latest
 ```
 You can then follow the logs:
 ```bash
@@ -89,7 +90,7 @@ docker run -d -p 5432:5432  \
     --restart=unless-stopped \
     --volume=/path/to/data:/postgresql/11/main \
     --volume=/path/to/ssl:/postgresql/11/ssl` \
-    cityseer/postgis
+    cityseer/postgis:latest
 ```
 You can then follow the logs:
 ```bash

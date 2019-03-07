@@ -70,7 +70,7 @@ RUN wget -O postgis.tar.gz http://download.osgeo.org/postgis/source/postgis-$POS
 
 # pgrouting (requires build directory)
 ENV PGROUTING_VERSION 2.6.1
-RUN wget -O pgrouting.tar.gz https://github.com/pgRouting/pgrouting/archive/v$PGROUTING_VERSION.tar.gz \
+RUN wget -O pgrouting.tar.gz https://github.com/pgRouting/pgrouting/releases/download/v$PGROUTING_VERSION/pgrouting-$PGROUTING_VERSION.tar.gz \
     && tar xf pgrouting.tar.gz \
     && cd pgrouting-$PGROUTING_VERSION \
     && mkdir build_dir \
