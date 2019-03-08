@@ -68,7 +68,13 @@ You will not be able to connect to your database at `localhost:5432` unless you 
 
 Gotchas
 -------
-If you first upload data to your container (before providing a mapped volume to your local machine), and then subsequently provide a mapped volume, then the mapped volume will be mapped over the internal folder and you will not be able to see data you may have previously uploaded into the container until you run it again without a volume mapping.
+- If you first upload data to your container (before providing a mapped volume to your local machine), and then subsequently provide a mapped volume, then the mapped volume will be mapped over the internal folder and you will not be able to see data you may have previously uploaded into the container until you run it again without a volume mapping.
+- If you are using the docker container to run an existing database that was not initialised with this container, then you'll need to check the following:
+  1. That you are using a docker image with Postgres and PostGIS versions that match your existing database;
+  1. That your `postgresql.conf` file has the `listen_addresses` item uncommented and set to listen to all ports, i.e. `listen_addresses = '*'`;
+  1. That your `pg_hba.conf` file allows the docker container to provide access per the following two lines:
+    - `local     all     all                 trust`
+    - `host      all     all     0.0.0.0/0   trust`
 
 Example
 -------
