@@ -1,4 +1,4 @@
-Postgres 11 with PostGIS 2.5, SFCGAL, and pgrouting 2.6.1, plus raster and SSL support.
+Postgres 11 with PostGIS 2.5.2, SFCGAL, and pgrouting 2.6.2, plus raster and SSL support.
 
 [![](https://images.microbadger.com/badges/version/cityseer/postgis.svg)](https://microbadger.com/images/cityseer/postgis "Get your own version badge on microbadger.com")
 [![](https://images.microbadger.com/badges/image/cityseer/postgis.svg)](https://microbadger.com/images/cityseer/postgis "Get your own image badge on microbadger.com")
